@@ -12,7 +12,7 @@ export async function getAllNotes(req, res) {
 
 export async function getNoteById(req, res) {
     try {
-        const note = await Note.getNoteById(req.params.id);
+        const note = await Note.findById(req.params.id);
         if(!note) {
             return res.status(404).json({message: "Note not found"});
         }
@@ -29,7 +29,7 @@ export async function createNote(req, res) {
     try {
         const {title, content} = req.body;
         if(!title) {
-            return res.status(300).json({message: "Missing title"});
+            return res.status(400).json({message: "Missing title"});
         }
         const newNote = new Note({title, content});
         const savedNote = await newNote.save();
@@ -50,7 +50,7 @@ export async function updateNote(req, res) {
         if(!updatedNote) {
             return res.status(404).json({message: "Note not found"});
         }
-        await updateNote.save();
+        await updatedNote.save();
         res.status(200).json(updatedNote);
     } catch(error) {
         console.log(`Error in updateNote: ${error}`);
