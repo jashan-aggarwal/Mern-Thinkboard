@@ -28,12 +28,12 @@ export async function getNoteById(req, res) {
 export async function createNote(req, res) {
     try {
         const {title, content} = req.body;
-        if(!title) {
+        if(!title.trim()) {
             return res.status(400).json({message: "Missing title"});
         }
         const newNote = new Note({title, content});
         const savedNote = await newNote.save();
-        res.status(201).json(newNote);
+        res.status(201).json(savedNote);
     } catch(error) {
         console.log(`Error in createNote: ${error}`);
         res.status(500).json({message: "Server Error"});
@@ -50,7 +50,6 @@ export async function updateNote(req, res) {
         if(!updatedNote) {
             return res.status(404).json({message: "Note not found"});
         }
-        await updatedNote.save();
         res.status(200).json(updatedNote);
     } catch(error) {
         console.log(`Error in updateNote: ${error}`);
